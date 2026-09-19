@@ -32,12 +32,27 @@ cd ../server && npm install && npm start    # serves API + built client on :4000
 | Variable | Purpose |
 | --- | --- |
 | `PORT` | Server port (default `4000`) |
-| `ANTHROPIC_API_KEY` | Enables AI-generated daily updates / executive summary. Without it, a template generator is used instead. |
+| `DATA_DIR` | If set, the database and uploaded photos are stored under this directory instead of `server/data` / `server/uploads` — use this to point at a host's persistent disk (see Deploying below). |
+| `ANTHROPIC_API_KEY` | Enables AI-generated daily updates / executive summary. Without it, a template generator is used instead — the app is fully usable with no key at all. |
 | `ANTHROPIC_MODEL` | Overrides the model used for generation (default `claude-sonnet-5`) |
+
+## Deploying so the whole delegation can use it from their phones
+
+The app needs one server reachable over the internet (not just local WiFi) so everyone's phone can sync to the same shared data, even from different locations. It needs **persistent disk storage** so the SQLite database and photos survive restarts/redeploys — that's what `DATA_DIR` and the disk below are for.
+
+**Render.com** (web UI only, no command line needed):
+
+1. Push this repo to GitHub (already done if you're reading this from the repo).
+2. Go to [render.com](https://render.com) → sign up / log in → **New +** → **Blueprint**.
+3. Connect your GitHub account and pick this repository. Render will read `render.yaml` at the repo root and pre-fill everything (build command, start command, a 1GB persistent disk mounted at `/data`, and `DATA_DIR=/data`).
+4. Click **Apply** / **Create**. First deploy takes a few minutes.
+5. Once live, Render gives you a public URL like `https://ewb-ghana-notebook.onrender.com` — that's the link everyone on the delegation opens on their phone (add it to the home screen for an app-like icon).
+
+This uses Render's paid **Starter** instance (a few dollars/month) because free instances there don't support persistent disks — without one, all data would be wiped on every restart. If you'd rather use a fully free host (Fly.io has a small free persistent-volume allowance), say so and it can be set up instead, though it needs the `flyctl` command line rather than only a web UI.
 
 ## Data
 
-Everything is stored in `server/data/ewb.sqlite` (created automatically on first run) and `server/uploads/` for photos. Both are gitignored — back up that folder if you want to keep delegation data.
+Everything is stored in `server/data/ewb.sqlite` (created automatically on first run) and `server/uploads/` for photos — or under `DATA_DIR` when that's set (e.g. on a hosted deploy). Local defaults are gitignored — back up that folder if you want to keep delegation data.
 
 Five workstreams are preloaded (Wheelchairs / ALYN, Afeka / Documentation & Media, University / Innovation Hub, Students / Local Collaboration, General Delegation). They can be renamed or added to from the Workstreams tab — nothing is hard-coded beyond the initial seed.
 

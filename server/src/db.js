@@ -5,7 +5,9 @@ import { fileURLToPath } from 'node:url';
 import { nanoid } from 'nanoid';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const dataDir = path.join(__dirname, '..', 'data');
+// DATA_DIR lets a host with a single mountable persistent volume (Render,
+// Railway, Fly, etc.) keep the database across deploys/restarts.
+const dataDir = process.env.DATA_DIR ? path.join(process.env.DATA_DIR, 'db') : path.join(__dirname, '..', 'data');
 fs.mkdirSync(dataDir, { recursive: true });
 
 export const db = new Database(path.join(dataDir, 'ewb.sqlite'));

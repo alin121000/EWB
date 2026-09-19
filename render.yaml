@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: ewb-ghana-notebook
+    env: node
+    plan: starter
+    buildCommand: cd client && npm install && npm run build && cd ../server && npm install
+    startCommand: cd server && npm start
+    disk:
+      name: ewb-data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: DATA_DIR
+        value: /data
+      - key: NODE_VERSION
+        value: 22.22.2
