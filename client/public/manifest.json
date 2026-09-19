@@ -1,0 +1,9 @@
+{
+  "name": "EWB Ghana Field Notebook",
+  "short_name": "Ghana Notebook",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6f4ef",
+  "theme_color": "#1d6f5c",
+  "icons": []
+}
